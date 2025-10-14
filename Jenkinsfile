@@ -2,7 +2,7 @@ pipeline {
     // ИЗМЕНЕНИЕ: Указываем Jenkins использовать контейнер с Docker для всех шагов
     agent {
         docker {
-            image 'docker:20.10.16'
+            image 'docker:28.5.1'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
