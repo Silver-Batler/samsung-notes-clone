@@ -6,6 +6,7 @@ pipeline {
     environment {
         // Получаем объект с учетными данными из Jenkins
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_COMPOSE_PATH = '/usr/bin/docker-compose' 
     }
 
     stages {
@@ -22,7 +23,7 @@ pipeline {
             steps {
                 echo 'Building Docker images...'
                 // Используем docker compose для сборки
-                sh '/usr/bin/docker-compose build'
+                sh '${DOCKER_COMPOSE_PATH} build'
             }
         }
 
@@ -31,7 +32,7 @@ pipeline {
             steps {
                 echo 'Pushing images to Docker Hub...'
                 // Используем docker compose для загрузки
-                sh '/usr/bin/docker-compose build'
+                sh '${DOCKER_COMPOSE_PATH} push'
             }
         }
     }
