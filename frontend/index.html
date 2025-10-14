@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- БОКОВАЯ ПАНЕЛЬ -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Заметки</h2>
+            </div>
+            
+            <div id="main-nav">
+                <nav class="sidebar-nav">
+                    <button id="new-note-sidebar-btn" class="nav-button">+ Новая заметка</button>
+                    <a href="#" class="nav-link active" data-filter="all">📝 Все заметки</a>
+                    <a href="#" class="nav-link" data-filter="favorites">⭐ Избранные</a>
+                    <a href="#" class="nav-link" data-filter="trash">🗑️ Корзина</a>
+                </nav>
+            </div>
+
+            <div id="context-nav" class="hidden">
+                <!-- Содержимое будет генерироваться через JS -->
+            </div>
+        </aside>
+
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <main class="main-content">
+            <!-- ВИД СЕТКИ ЗАМЕТОК -->
+            <div id="notes-grid-view">
+                <div id="trash-warning" class="trash-warning hidden">
+                    Заметки в корзине будут автоматически удалены через 30 дней.
+                </div>
+                <div id="notes-grid" class="notes-grid">
+                    <!-- Карточки заметок будут здесь -->
+                </div>
+            </div>
+
+            <!-- ВИД РЕДАКТОРА ОДНОЙ ЗАМЕТКИ -->
+            <div id="note-editor-view" class="hidden">
+                <div class="editor-toolbar">
+                    <button id="back-to-grid-btn">← Назад к списку</button>
+                    <div>
+                        <button id="restore-btn" class="hidden" title="Восстановить">↩️</button>
+                        <!-- ИЗМЕНЕНИЕ: Убираем эмодзи из кнопки -->
+                        <button id="favorite-btn" title="В избранное"></button>
+                        <button id="delete-btn" title="Удалить">🗑️</button>
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <input type="text" id="note-title-input" placeholder="Заголовок">
+                    <textarea id="note-content-input" placeholder="Начните писать..."></textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal">
+            <h2>Создать новую заметку</h2>
+            <p>Введите название для вашей новой заметки.</p>
+            <input type="text" id="new-note-title-input" placeholder="Название заметки">
+            <div id="modal-error-msg" class="modal-error"></div>
+            <div class="modal-buttons">
+                <button id="cancel-create-btn" class="modal-button secondary">Отмена</button>
+                <button id="confirm-create-btn" class="modal-button primary">Создать</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

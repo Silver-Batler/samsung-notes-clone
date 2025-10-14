@@ -1,0 +1,322 @@
+/* --- ИЗМЕНЕНИЕ: Подключаем профессиональный шрифт Inter --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+/* --- ПЕРЕМЕННЫЕ ЦВЕТА --- */
+:root {
+    --bg-main: #121212;
+    --bg-secondary: #1E1E1E;
+    --bg-tertiary: #282828;
+    --accent-color: #FFA500;
+    --text-primary: #E0E0E0;
+    --text-secondary: #B3B3B3;
+    --border-color: #333333;
+}
+
+/* --- ОБЩИЕ СТИЛИ И СБРОСЫ --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    /* ИЗМЕНЕНИЕ: Устанавливаем новый шрифт для всего приложения */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.hidden { display: none !important; }
+
+/* --- ИЗМЕНЕНИЕ: Кастомный скроллбар для тёмной темы --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* --- ОСНОВНАЯ СТРУКТУРА --- */
+.app-layout {
+    display: flex;
+    height: 100vh;
+}
+
+/* --- БОКОВАЯ ПАНЕЛЬ --- */
+.sidebar {
+    width: 240px;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-header h2 { margin: 0 0 20px 0; font-weight: 700; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 10px; }
+
+.nav-button, .nav-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s; /* Плавность */
+}
+.nav-link:hover, .nav-button:hover { 
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+.nav-link.active {
+    color: var(--accent-color);
+    background-color: var(--bg-tertiary);
+    font-weight: 700;
+}
+
+/* --- ОСНОВНОЙ КОНТЕНТ --- */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* --- СЕТКА ЗАМЕТОК --- */
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+.note-card, .new-note-card {
+    height: 220px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px; /* Чуть мягче углы */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.note-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.note-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.note-card-content {
+    flex-grow: 1;
+    font-size: 14px;
+    color: var(--text-secondary);
+    overflow: hidden;
+    line-height: 1.5; /* Улучшаем читаемость */
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+}
+
+.new-note-card {
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+/* --- РЕДАКТОР ЗАМЕТОК --- */
+#note-editor-view { height: 100%; display: flex; flex-direction: column; }
+
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.editor-toolbar button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease-in-out, transform 0.2s;
+}
+.editor-toolbar button:hover {
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+#back-to-grid-btn { font-size: 16px; }
+
+.editor-content { flex-grow: 1; display: flex; flex-direction: column; gap: 15px; }
+
+#note-title-input, #note-content-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    box-sizing: border-box;
+    font-family: inherit; /* Наследуем красивый шрифт */
+}
+#note-title-input:focus, #note-content-input:focus { outline: none; }
+
+#note-title-input { font-size: 32px; font-weight: 700; }
+#note-content-input { font-size: 16px; flex-grow: 1; resize: none; line-height: 1.6; }
+
+#favorite-btn.is-favorite {
+    color: var(--accent-color);
+}
+
+/* --- СТИЛИ МОДАЛЬНОГО ОКНА --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: var(--bg-secondary);
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid var(--border-color);
+}
+
+.modal h2 { margin-top: 0; font-weight: 700; }
+.modal p { color: var(--text-secondary); }
+
+#new-note-title-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+#new-note-title-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.modal-error {
+    color: #ff6b6b;
+    font-size: 14px;
+    height: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700; /* Делаем текст на кнопках жирным */
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+.modal-button:hover {
+    filter: brightness(1.1);
+}
+.modal-button.primary {
+    background-color: var(--accent-color);
+    color: var(--bg-main);
+}
+.modal-button.secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* --- СТИЛИ КОНТЕКСТНОЙ НАВИГАЦИИ --- */
+#context-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#context-nav h3 {
+    margin: 0 0 10px 0;
+    padding: 12px;
+    color: var(--text-secondary);
+    font-size: 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.context-note-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.context-note-link:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.context-note-link.active {
+    color: var(--accent-color);
+    background-color: var(--bg-tertiary);
+}
+
+/* --- СТИЛИ ПРЕДУПРЕЖДЕНИЯ В КОРЗИНЕ --- */
+.trash-warning {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+}
+
+/* --- ИЗМЕНЕНИЕ: Добавляем стили фокуса для доступности --- */
+a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
