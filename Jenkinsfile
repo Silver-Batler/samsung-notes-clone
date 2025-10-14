@@ -1,25 +1,23 @@
 pipeline {
-    agent any // Говорим Jenkins, что сборку можно выполнять на любом доступном агенте
+    // Агент, на котором будет выполняться сборка
+    agent any
 
-    // Добавляем переменные окружения, чтобы не хранить логин в коде
+    // Переменные окружения, доступные на всех этапах
     environment {
+        // Получаем объект с учетными данными из Jenkins
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKERHUB_USERNAME = DOCKERHUB_CREDENTIALS.username
     }
 
     stages {
-        // --- Этап 1: Клонирование репозитория (делается автоматически) ---
-        
-        // --- Этап 2: Логин в Docker Hub ---
+        // Этап 1: Вход в Docker Hub
         stage('Login to Docker Hub') {
             steps {
-                // Используем учетные данные, которые мы сохраним в Jenkins
-                // DOCKERHUB_CREDENTIALS_PSW - это специальная переменная, которую Jenkins создает
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_USERNAME --password-stdin'
+                echo "Logging in to Docker Hub as ${DOCKERHUB_CREDENTIALS_USR}..."
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
 
-        // --- Этап 3: Сборка Docker-образов ---
+        // Этап 2: Сборка Docker-образов
         stage('Build images') {
             steps {
                 echo 'Building Docker images...'
@@ -28,7 +26,7 @@ pipeline {
             }
         }
 
-        // --- Этап 4: Загрузка образов в Docker Hub ---
+        // Этап 3: Загрузка образов в Docker Hub
         stage('Push images to Docker Hub') {
             steps {
                 echo 'Pushing images to Docker Hub...'
@@ -38,14 +36,13 @@ pipeline {
         }
     }
 
+    // Блок, который выполняется после всех этапов
     post {
-        // --- Этап 5: Выход из Docker Hub (хорошая практика) ---
+        // Выполняется всегда, независимо от того, успешна сборка или нет
         always {
-            stage('Logout from Docker Hub') {
-                steps {
-                    sh 'docker logout'
-                }
-            }
+            // ИСПРАВЛЕНИЕ: Вместо stage() используем просто именованный шаг
+            echo 'Logging out from Docker Hub...'
+            sh 'docker logout'
         }
     }
 }
