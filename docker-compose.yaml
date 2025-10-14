@@ -1,6 +1,7 @@
 services:
   backend:
     build: ./backend
+    image: silverbatler/samsung-notes-backend:latest
     restart: always
     ports:
       - "5001:5000"
@@ -14,6 +15,7 @@ services:
 
   frontend:
     build: ./frontend
+    image: silverbatler/samsung-notes-frontend:latest
     restart: always
     ports:
       - "8080:80"
