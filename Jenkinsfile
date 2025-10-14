@@ -22,7 +22,7 @@ pipeline {
             steps {
                 echo 'Building Docker images...'
                 // Используем docker compose для сборки
-                sh 'docker-compose build'
+                sh '/usr/bin/docker-compose build'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo 'Pushing images to Docker Hub...'
                 // Используем docker compose для загрузки
-                sh 'docker-compose build'
+                sh '/usr/bin/docker-compose build'
             }
         }
     }
