@@ -25,7 +25,8 @@ pipeline {
         stage('Build and Push') {
             steps {
                 echo 'Building and pushing Docker images...'
-                sh '${DOCKER_COMPOSE_PATH} build'
+                sh '${DOCKER_COMPOSE_PATH} build --no-cache backend'
+                sh '${DOCKER_COMPOSE_PATH} build frontend'
                 sh '${DOCKER_COMPOSE_PATH} push'
             }
         }
