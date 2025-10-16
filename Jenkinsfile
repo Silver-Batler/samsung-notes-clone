@@ -31,6 +31,15 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                echo 'Running automated tests...'
+                // Запускаем pytest внутри временного контейнера backend.
+                // pytest сам найдет и выполнит все тесты в папке /app.
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m pytest'
+            }
+        }
+
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing images to Docker Hub...'
