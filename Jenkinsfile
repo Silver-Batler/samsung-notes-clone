@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        // ПУТЬ К DOCKER-COMPOSE НА TEST-VM (где работает Jenkins)
-        DOCKER_COMPOSE_PATH = '/usr/libexec/docker/cli-plugins/docker-compose'
+        // Указываем точный путь к docker-compose на test-vm (где работает Jenkins)
+        DOCKER_COMPOSE_PATH = '/usr/libexec/docker/cli-plugins/docker-compose' 
     }
 
     stages {
@@ -23,36 +23,38 @@ pipeline {
             }
         }
 
-        // --- НОВЫЙ ЭТАП ---
         stage('Deploy to Stage') {
             steps {
                 echo 'Deploying to Stage server...'
-                // Оборачиваем SSH-команды в sshagent, используя созданные credentials
                 sshagent(credentials: ['stage-vm-ssh-key']) {
-                    // Команды, которые будут выполнены на stage-vm
-                    // !! ЗАМЕНИТЕ 192.168.0.34 НА IP-АДРЕС ВАШЕЙ STAGE-VM !!
+                    // Используем синтаксис 'heredoc' для передачи многострочного скрипта по SSH.
+                    // 'EOSSH' - это просто уникальный маркер, означающий "конец скрипта".
                     sh '''
-                        ssh -o StrictHostKeyChecking=no vboxuser@192.168.0.34 << 'ENDSSH'
+                        ssh -o StrictHostKeyChecking=no vboxuser@192.168.0.34 << 'EOSSH'
+
+                        # Эта команда говорит скрипту остановиться, если любая из команд завершится с ошибкой.
+                        set -e
                         
                         echo "--- Connected to Stage VM ---"
                         
                         # Переходим в папку проекта на stage-vm
                         cd ~/samsung-notes-clone
+                        echo "--- Changed directory to samsung-notes-clone ---"
                         
-                        # Обновляем код из Git (на всякий случай, если изменился docker-compose.yaml)
+                        # Обновляем код из Git
                         git pull
+                        echo "--- Git pull complete ---"
                         
                         # Скачиваем последние версии образов из Docker Hub
-                        # !! УКАЖИТЕ ЗДЕСЬ ПУТЬ К DOCKER-COMPOSE НА STAGE-VM !!
-                        # (скорее всего, он такой же)
+                        # Убедитесь, что этот путь правильный и для stage-vm
                         /usr/libexec/docker/cli-plugins/docker-compose pull
+                        echo "--- Docker pull complete ---"
                         
                         # Перезапускаем приложение с новыми образами в фоновом режиме
                         /usr/libexec/docker/cli-plugins/docker-compose up -d --force-recreate
-                        
                         echo "--- Deployment to Stage complete! ---"
                         
-                        ENDSSH
+EOSSH
                     '''
                 }
             }
