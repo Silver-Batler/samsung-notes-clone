@@ -1,8 +1,10 @@
 pipeline {
-    agent any
+    agent { label 'linux' }
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        // ИЗМЕНЕНИЕ: Указываем точный путь здесь
+        DOCKER_COMPOSE_PATH = '/usr/bin/docker-compose' 
     }
 
     stages {
@@ -16,9 +18,9 @@ pipeline {
         stage('Build and Push') {
             steps {
                 echo 'Building and pushing Docker images...'
-                // Команды выполняются в корне проекта, где лежит docker-compose.yaml
-                sh 'docker-compose build'
-                sh 'docker-compose push'
+                // ИЗМЕНЕНИЕ: Используем переменную с полным путем
+                sh '${DOCKER_COMPOSE_PATH} build'
+                sh '${DOCKER_COMPOSE_PATH} push'
             }
         }
     }
