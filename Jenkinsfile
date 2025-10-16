@@ -14,28 +14,23 @@ pipeline {
             }
         }
 
-        // Этап 2: Сборка образов
         stage('Build') {
             steps {
                 echo 'Building Docker images...'
-                // Принудительно пересобираем backend, чтобы установить flake8 и bandit
                 sh '${DOCKER_COMPOSE_PATH} build --no-cache backend'
-                // frontend собираем как обычно
                 sh '${DOCKER_COMPOSE_PATH} build frontend'
             }
         }
 
-        // Этап 3: Статический анализ
         stage('Static Analysis') {
             steps {
                 echo 'Running static analysis on backend...'
-                // Теперь эти команды запускаются на свежесобранном образе, где есть flake8 и bandit
-                sh '${DOCKER_COMPOSE_PATH} run --rm backend flake8 .'
-                sh '${DOCKER_COMPOSE_PATH} run --rm backend bandit -r .'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m flake8 .'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m bandit -r .'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m black --check .'
             }
         }
 
-        // Этап 4: Загрузка образов
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing images to Docker Hub...'
@@ -43,13 +38,12 @@ pipeline {
             }
         }
         
-        // Этап 5: Развертывание
         stage('Deploy to Stage') {
             steps {
                 echo 'Deploying to Stage server...'
                 sshagent(credentials: ['stage-vm-ssh-key']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no vboxuser@192.168.0.34 << 'EOSSH'
+                        ssh -o StrictHostKeyChecking=no vboxuser@192.18.0.34 << 'EOSSH'
                         set -e
                         echo "--- Connected to Stage VM ---"
                         cd ~/samsung-notes-clone
