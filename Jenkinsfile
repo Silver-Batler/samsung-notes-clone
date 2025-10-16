@@ -28,11 +28,9 @@ pipeline {
             }
         }
 
-        // --- ЭТАП С ИСПРАВЛЕНИЕМ ---
         stage('Test') {
             steps {
                 echo 'Running automated tests...'
-                // ЯВНО УКАЗЫВАЕМ ПАПКУ 'tests/'
                 sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m pytest tests/'
             }
         }
