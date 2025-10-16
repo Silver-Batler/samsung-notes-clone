@@ -16,11 +16,9 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                echo 'Running static analysis...'
-                // Выполняем flake8 и bandit на коде бэкенда
-                // Команды запускаются внутри папки проекта
-                sh 'docker-compose run --rm backend flake8 .'
-                sh 'docker-compose run --rm backend bandit -r .'
+                echo 'Running static analysis on backend...'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend flake8 .'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend bandit -r .'
             }
         }
 
@@ -31,38 +29,20 @@ pipeline {
                 sh '${DOCKER_COMPOSE_PATH} push'
             }
         }
-
+        
         stage('Deploy to Stage') {
             steps {
                 echo 'Deploying to Stage server...'
                 sshagent(credentials: ['stage-vm-ssh-key']) {
-                    // Используем синтаксис 'heredoc' для передачи многострочного скрипта по SSH.
-                    // 'EOSSH' - это просто уникальный маркер, означающий "конец скрипта".
                     sh '''
                         ssh -o StrictHostKeyChecking=no vboxuser@192.168.0.34 << 'EOSSH'
-
-                        # Эта команда говорит скрипту остановиться, если любая из команд завершится с ошибкой.
                         set -e
-                        
                         echo "--- Connected to Stage VM ---"
-                        
-                        # Переходим в папку проекта на stage-vm
                         cd ~/samsung-notes-clone
-                        echo "--- Changed directory to samsung-notes-clone ---"
-                        
-                        # Обновляем код из Git
                         git pull
-                        echo "--- Git pull complete ---"
-                        
-                        # Скачиваем последние версии образов из Docker Hub
-                        # Убедитесь, что этот путь правильный и для stage-vm
                         /usr/libexec/docker/cli-plugins/docker-compose pull
-                        echo "--- Docker pull complete ---"
-                        
-                        # Перезапускаем приложение с новыми образами в фоновом режиме
                         /usr/libexec/docker/cli-plugins/docker-compose up -d --force-recreate
                         echo "--- Deployment to Stage complete! ---"
-                        
 EOSSH
                     '''
                 }
