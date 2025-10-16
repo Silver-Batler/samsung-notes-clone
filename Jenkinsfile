@@ -43,7 +43,7 @@ pipeline {
                 echo 'Deploying to Stage server...'
                 sshagent(credentials: ['stage-vm-ssh-key']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no vboxuser@192.18.0.34 << 'EOSSH'
+                        ssh -o StrictHostKeyChecking=no vboxuser@192.168.0.34 << 'EOSSH'
                         set -e
                         echo "--- Connected to Stage VM ---"
                         cd ~/samsung-notes-clone
