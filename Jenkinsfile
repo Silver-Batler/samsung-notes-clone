@@ -31,7 +31,15 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running automated tests...'
-                sh '${DOCKER_COMPOSE_PATH} run --rm backend sh -c "python -m pytest"'
+                sh '''
+                    ${DOCKER_COMPOSE_PATH} up -d db
+                    # Wait for Postgres to be ready
+                    for i in $(seq 1 30); do
+                      ${DOCKER_COMPOSE_PATH} exec -T db pg_isready -h db -U user -d notes_db -p 5432 && break
+                      sleep 2
+                    done
+                    ${DOCKER_COMPOSE_PATH} run --rm backend sh -lc "python -m pytest -q -vv --maxfail=1"
+                '''
             }
         }
 
@@ -60,6 +68,7 @@ EOSSH
 
     post {
         always {
+            sh '${DOCKER_COMPOSE_PATH} down -v || true'
             sh 'docker logout'
         }
     }
