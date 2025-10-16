@@ -63,7 +63,8 @@ def get_notes():
     filter_type = request.args.get('filter', 'all')
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    query = 'SELECT id, title, content, is_favorite, is_deleted, updated_at FROM notes WHERE '
+    query = 'SELECT id, title, content, is_favorite, is_deleted, ' \
+    'updated_at FROM notes WHERE '
     if filter_type == 'favorites':
         query += 'is_favorite = TRUE AND is_deleted = FALSE'
     elif filter_type == 'trash':
@@ -95,12 +96,14 @@ def create_note():
     title = data['title'].strip()
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id FROM notes WHERE title = %s AND is_deleted = FALSE;", (title,))
+    cur.execute("SELECT id FROM notes WHERE title = %s AND is_deleted = FALSE;",
+                 (title,))
     if cur.fetchone():
         cur.close()
         conn.close()
         return jsonify({'error': 'Заметка с таким названием уже существует'}), 409
-    cur.execute('INSERT INTO notes (title, content) VALUES (%s, %s) RETURNING id;', (title, ''))
+    cur.execute('INSERT INTO notes (title, content) VALUES (%s, %s) ' \
+    'RETURNING id;', (title, ''))
     new_id = cur.fetchone()[0]
     conn.commit()
     cur.close()
@@ -114,9 +117,11 @@ def update_note(note_id):
     cur = conn.cursor()
     cur.execute(
         '''UPDATE notes SET 
-           title = %s, content = %s, is_favorite = %s, is_deleted = %s, updated_at = CURRENT_TIMESTAMP
+           title = %s, content = %s, is_favorite = %s, is_deleted = %s, 
+           updated_at = CURRENT_TIMESTAMP
            WHERE id = %s;''',
-        (data.get('title'), data.get('content'), data.get('is_favorite', False), data.get('is_deleted', False), note_id)
+        (data.get('title'), data.get('content'), data.get('is_favorite', False), 
+         data.get('is_deleted', False), note_id)
     )
     conn.commit()
     cur.close()
@@ -132,5 +137,3 @@ def hard_delete_note(note_id):
     cur.close()
     conn.close()
     return jsonify({'status': 'success'}), 200
-
-# --- БЛОК if __name__ == '__main__': УДАЛЕН ---

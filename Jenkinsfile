@@ -14,8 +14,6 @@ pipeline {
             }
         }
 
-        // --- ИЗМЕНЕНИЕ: Сначала Build, потом Analysis ---
-
         // Этап 2: Сборка образов
         stage('Build') {
             steps {
