@@ -31,7 +31,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running automated tests...'
-                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m pytest tests/'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend sh -c "python -m pytest"'
             }
         }
 
