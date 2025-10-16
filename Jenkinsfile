@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         // ИЗМЕНЕНИЕ: Указываем точный путь здесь
-        DOCKER_COMPOSE_PATH = '/usr/bin/docker-compose' 
+        DOCKER_COMPOSE_PATH = '/usr/libexec/docker/cli-plugins/docker-compose' 
     }
 
     stages {
