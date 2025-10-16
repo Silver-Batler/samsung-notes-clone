@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        // Указываем точный путь к docker-compose на test-vm (где работает Jenkins)
         DOCKER_COMPOSE_PATH = '/usr/libexec/docker/cli-plugins/docker-compose' 
     }
 
