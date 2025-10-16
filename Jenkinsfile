@@ -14,6 +14,16 @@ pipeline {
             }
         }
 
+        stage('Static Analysis') {
+            steps {
+                echo 'Running static analysis...'
+                // Выполняем flake8 и bandit на коде бэкенда
+                // Команды запускаются внутри папки проекта
+                sh 'docker-compose run --rm backend flake8 .'
+                sh 'docker-compose run --rm backend bandit -r .'
+            }
+        }
+
         stage('Build and Push') {
             steps {
                 echo 'Building and pushing Docker images...'
