@@ -51,7 +51,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     depends_on:
-    - prometheus
+      - prometheus
 
 volumes:
   postgres_data:
