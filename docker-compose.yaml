@@ -2,7 +2,6 @@ services:
   backend:
     build: ./backend
     image: silverbatler/samsung-notes-backend:latest
-    # Строка volumes удалена
     restart: always
     ports:
       - "5001:5000"
