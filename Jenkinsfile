@@ -22,7 +22,7 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m flake8 .'
+                sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m flake8 . --max-line-length=88'
                 sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m bandit -r .'
                 sh '${DOCKER_COMPOSE_PATH} run --rm backend python -m black --check .'
             }
