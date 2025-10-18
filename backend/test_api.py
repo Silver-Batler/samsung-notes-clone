@@ -1,5 +1,5 @@
 import pytest
-from app import app  # Импортируем наше Flask-приложение из файла app.py
+from app import app, db  
 
 
 @pytest.fixture
@@ -23,7 +23,7 @@ def clean_database():
         # Команда TRUNCATE полностью и быстро очищает таблицу
         # RESTART IDENTITY сбрасывает счетчик ID (чтобы id всегда начинались с 1)
         db.engine.execute("TRUNCATE TABLE notes RESTART IDENTITY;")
-    yield  # В этот момент выполняется сам тест
+    yield
 
 
 # --- Unit-тесты (тестируем маленькие, изолированные части) ---
