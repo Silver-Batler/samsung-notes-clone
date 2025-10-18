@@ -27,7 +27,7 @@ def clean_database():
             cur.close()
         if conn:
             conn.close()
-    
+
     yield
 
 
