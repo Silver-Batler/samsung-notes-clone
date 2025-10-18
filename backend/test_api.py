@@ -1,5 +1,5 @@
 import pytest
-from app import app, db
+from app import app, get_db_connection
 
 
 @pytest.fixture
@@ -15,15 +15,19 @@ def client():
 
 @pytest.fixture(autouse=True)
 def clean_database():
-    """
-    Эта фикстура автоматически выполняется перед КАЖДЫМ тестом.
-    Она удаляет все записи из таблицы 'notes', чтобы каждый тест
-    начинался с абсолютно чистой базы данных.
-    """
-    with app.app_context():
-        # Команда TRUNCATE полностью и быстро очищает таблицу
-        # RESTART IDENTITY сбрасывает счетчик ID (чтобы id всегда начинались с 1)
-        db.engine.execute("TRUNCATE TABLE notes RESTART IDENTITY;")
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("TRUNCATE TABLE notes RESTART IDENTITY;")
+        conn.commit()
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+    
     yield
 
 
