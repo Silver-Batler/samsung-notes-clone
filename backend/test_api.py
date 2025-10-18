@@ -12,6 +12,19 @@ def client():
     with app.test_client() as client:
         yield client
 
+@pytest.fixture(autouse=True)
+def clean_database():
+    """
+    Эта фикстура автоматически выполняется перед КАЖДЫМ тестом.
+    Она удаляет все записи из таблицы 'notes', чтобы каждый тест
+    начинался с абсолютно чистой базы данных.
+    """
+    with app.app_context():
+        # Команда TRUNCATE полностью и быстро очищает таблицу
+        # RESTART IDENTITY сбрасывает счетчик ID (чтобы id всегда начинались с 1)
+        db.engine.execute("TRUNCATE TABLE notes RESTART IDENTITY;")
+    yield  # В этот момент выполняется сам тест
+
 
 # --- Unit-тесты (тестируем маленькие, изолированные части) ---
 
