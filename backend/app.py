@@ -127,8 +127,8 @@ def update_note(note_id):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
-        """UPDATE notes SET 
-           title = %s, content = %s, is_favorite = %s, is_deleted = %s, 
+        """UPDATE notes SET
+           title = %s, content = %s, is_favorite = %s, is_deleted = %s,
            updated_at = CURRENT_TIMESTAMP
            WHERE id = %s;""",
         (
