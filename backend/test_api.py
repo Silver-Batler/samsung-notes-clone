@@ -1,5 +1,5 @@
 import pytest
-from app import app, db  
+from app import app, db
 
 
 @pytest.fixture
@@ -11,6 +11,7 @@ def client():
     app.config["TESTING"] = True
     with app.test_client() as client:
         yield client
+
 
 @pytest.fixture(autouse=True)
 def clean_database():
