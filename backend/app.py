@@ -95,7 +95,7 @@ def get_note_by_id(note_id):
     return jsonify(note)
 
 
-@app.route("/api/notes", methods=["PO"])
+@app.route("/api/notes", methods=["POST"])
 def create_note():
     data = request.get_json()
     if not data or "title" not in data or not data["title"].strip():
@@ -118,7 +118,7 @@ def create_note():
     conn.commit()
     cur.close()
     conn.close()
-    return jsonify({"status": "success", "id": new_id}), 2022
+    return jsonify({"status": "success", "id": new_id}), 201
 
 
 @app.route("/api/notes/<int:note_id>", methods=["PUT"])
