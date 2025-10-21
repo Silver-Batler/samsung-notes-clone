@@ -1,4 +1,4 @@
-/* --- ИЗМЕНЕНИЕ: Подключаем профессиональный шрифт Inter --- */
+/* ---  Подключаем шрифт Inter --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 /* --- ПЕРЕМЕННЫЕ ЦВЕТА --- */
@@ -19,7 +19,7 @@
 
 body {
     margin: 0;
-    /* ИЗМЕНЕНИЕ: Устанавливаем новый шрифт для всего приложения */
+    /*  Устанавливаем новый шрифт для всего приложения */
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-main);
     color: var(--text-primary);
@@ -29,7 +29,7 @@ body {
 
 .hidden { display: none !important; }
 
-/* --- ИЗМЕНЕНИЕ: Кастомный скроллбар для тёмной темы --- */
+/* ---  Кастомный скроллбар для тёмной темы --- */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -72,7 +72,7 @@ body {
     border: none;
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s; /* Плавность */
+    transition: background-color 0.2s, color 0.2s; 
 }
 .nav-link:hover, .nav-button:hover { 
     background-color: var(--bg-tertiary);
@@ -101,7 +101,7 @@ body {
     height: 220px;
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    border-radius: 12px; /* Чуть мягче углы */
+    border-radius: 12px; 
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -127,7 +127,7 @@ body {
     font-size: 14px;
     color: var(--text-secondary);
     overflow: hidden;
-    line-height: 1.5; /* Улучшаем читаемость */
+    line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
@@ -173,7 +173,7 @@ body {
     border: none;
     color: var(--text-primary);
     box-sizing: border-box;
-    font-family: inherit; /* Наследуем красивый шрифт */
+    font-family: inherit; 
 }
 #note-title-input:focus, #note-content-input:focus { outline: none; }
 
@@ -245,7 +245,7 @@ body {
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 700; /* Делаем текст на кнопках жирным */
+    font-weight: 700;
     cursor: pointer;
     transition: filter 0.2s;
 }
@@ -315,7 +315,7 @@ body {
     border: 1px solid var(--border-color);
 }
 
-/* --- ИЗМЕНЕНИЕ: Добавляем стили фокуса для доступности --- */
+/* --- Добавляем стили фокуса для доступности --- */
 a:focus-visible, button:focus-visible, input:focus-visible {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;

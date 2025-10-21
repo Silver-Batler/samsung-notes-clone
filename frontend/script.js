@@ -239,12 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleToggleFavorite() {
         if (!activeNote) return;
-        // 1. Меняем состояние в объекте
         activeNote.is_favorite = !activeNote.is_favorite;
-        // 2. Обновляем внешний вид кнопки (иконку и цвет через класс)
         favoriteBtn.textContent = activeNote.is_favorite ? '★' : '☆';
         favoriteBtn.classList.toggle('is-favorite', activeNote.is_favorite);
-        // 3. Отправляем изменения на сервер
         await api.updateNote(activeNote.id, activeNote);
     }
     
